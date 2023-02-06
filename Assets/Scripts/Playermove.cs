@@ -22,6 +22,10 @@ public class Playermove : MonoBehaviour
     private float jumpTimer;
     private float coyoteTimer;
 
+    [Header("Dash")]
+    [SerializeField]private float dashSpeed;
+    private bool dashing = false;
+
     [Header("Player Components")]
     private Rigidbody2D rb;
     private SpriteRenderer spri;
@@ -43,7 +47,7 @@ public class Playermove : MonoBehaviour
     {
         bool wasOnGround = onGround;
         //Casts 2 raycasts down to see if the player is on the ground
-        onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, groundLayer) || Physics2D.Raycast(transform.position - colliderOffset, Vector2.down, distanceToGround, groundLayer);
+        onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(-colliderOffset.x,colliderOffset.y,0), Vector2.down, distanceToGround, groundLayer);
 
         //Starts a coyote time after you leave ground
         if(wasOnGround && !onGround){
@@ -57,6 +61,10 @@ public class Playermove : MonoBehaviour
         if(Input.GetButtonDown("Jump")){
             //Starts a jump delay so you don't have to time your jumps perfectly to string them
             jumpTimer = Time.time + jumpDelay;
+        }
+
+        if(Input.GetKeyDown(KeyCode.K)){
+            StartCoroutine(Dash());
         }
 
     }
@@ -88,9 +96,6 @@ public class Playermove : MonoBehaviour
         }
         if(Mathf.Abs(rb.velocity.x) > maxSpeed){
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
-        }
-        if(onGround){
-            maxSpeed = 12;
         }
     }
 
@@ -136,10 +141,25 @@ public class Playermove : MonoBehaviour
         }
     }
 
+    IEnumerator Dash(){
+        if(dashing == false){
+            dashing = true;
+            rb.velocity = new Vector2(0,0);
+            float oldFall = fallMultiplier;
+            fallMultiplier = 0;
+            yield return new WaitForSeconds(0.05f);
+            rb.velocity = new Vector2(0,0);
+            if(direction == new Vector2(0,0)) direction = new Vector2(facingRight ? 1 : -1 ,0);
+            rb.AddForce(dashSpeed * direction, ForceMode2D.Impulse);
+            yield return new WaitForSeconds(0.2f);
+            fallMultiplier = oldFall;
+            dashing = false;
+        }
+    }
     private void OnDrawGizmos(){
         //Shows me where my ground check raycasts point
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position + colliderOffset, transform.position + colliderOffset + Vector3.down * distanceToGround);
-        Gizmos.DrawLine(transform.position - colliderOffset, transform.position - colliderOffset + Vector3.down * distanceToGround);
+        Gizmos.DrawLine(transform.position + new Vector3(-colliderOffset.x,colliderOffset.y,0), transform.position +  new Vector3(-colliderOffset.x,colliderOffset.y,0) + Vector3.down * distanceToGround);
     }
 }
