@@ -23,6 +23,13 @@ public class Playermove : MonoBehaviour
     private float coyoteTimer;
 
     [Header("Dash")]
+
+    private bool stunned = true;
+    private bool stunRecovery = false;
+
+    private float howLongYouAreStunned = 1f;
+    private int dashesLeft = 1;
+
     [SerializeField]private float dashSpeed;
     private bool dashing = false;
 
@@ -45,6 +52,9 @@ public class Playermove : MonoBehaviour
 
     void Update()
     {
+        if (onGround) {
+            dashesLeft = 1;
+        }
         bool wasOnGround = onGround;
         //Casts 2 raycasts down to see if the player is on the ground
         onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(-colliderOffset.x,colliderOffset.y,0), Vector2.down, distanceToGround, groundLayer);
@@ -72,7 +82,13 @@ public class Playermove : MonoBehaviour
     void FixedUpdate()
     {
         //Moves character and checks to see if it should change the gravity and drag
-        moveCharacter(direction.x);
+        if(stunned == false){
+            moveCharacter(direction.x);
+
+        } else if(stunned == true && stunRecovery == false) {
+            StartCoroutine(stunnedTimer());
+        }
+
         modifyPhysics();
 
         if(Mathf.Abs(rb.velocity.y) > maxVerticalSpeed){
@@ -142,7 +158,8 @@ public class Playermove : MonoBehaviour
     }
 
     IEnumerator Dash(){
-        if(dashing == false){
+
+        if(dashing == false && dashesLeft > 0 && stunned == false){
             dashing = true;
             rb.velocity = new Vector2(0,0);
             float oldFall = fallMultiplier;
@@ -153,8 +170,17 @@ public class Playermove : MonoBehaviour
             rb.AddForce(dashSpeed * direction, ForceMode2D.Impulse);
             yield return new WaitForSeconds(0.2f);
             fallMultiplier = oldFall;
+            dashesLeft -= 1;
             dashing = false;
+            stunned = true;
         }
+    }
+
+    IEnumerator stunnedTimer() {
+        stunRecovery = true;
+        yield return new WaitForSeconds(howLongYouAreStunned);
+        stunned = false;
+        stunRecovery = false;
     }
     private void OnDrawGizmos(){
         //Shows me where my ground check raycasts point
