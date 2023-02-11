@@ -1,48 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Playermove : MonoBehaviour
 {
     [Header("Horizontal Movement")]
-    public float moveSpeed = 10;
-    private Vector2 direction;
-    public bool facingRight = true;
+        public float moveSpeed = 10;
+        public Vector2 direction;
+        public bool facingRight = true;
 
     [Header("Physics")]
-    public float maxSpeed;
-    public float linearDrag = 4f;
-    public float gravity = 1;
-    public float fallMultiplier = 5;
-    public float maxVerticalSpeed;
+        public float maxSpeed;
+        public float linearDrag = 4f;
+        public float gravity = 1;
+        public float fallMultiplier = 5;
+        public float maxVerticalSpeed;
 
     [Header("Jump Stuff")]
-    public float jumpHeight;
-    public float jumpDelay = 0.25f;
-    private float jumpTimer;
-    private float coyoteTimer;
+        public float jumpHeight;
+        public float jumpDelay = 0.25f;
+        private float jumpTimer;
+        private float coyoteTimer;
 
     [Header("Dash")]
 
-    private bool stunned = true;
-    private bool stunRecovery = false;
+        private bool stunned = true;
+        private bool stunRecovery = false;
 
-    private float howLongYouAreStunned = 1f;
-    private int dashesLeft = 1;
+        private float howLongYouAreStunned = 1f;
+        private int dashesLeft = 1;
 
-    [SerializeField]private float dashSpeed;
-    private bool dashing = false;
+        [SerializeField]private float dashSpeed;
+        private bool dashing = false;
 
     [Header("Player Components")]
-    private Rigidbody2D rb;
-    private SpriteRenderer spri;
-    public LayerMask groundLayer;
-    public GameObject player;
+        private Rigidbody2D rb;
+        private SpriteRenderer spri;
+        public LayerMask groundLayer;
+        public GameObject player;
+        public PlayerInput playerInput;
+        private InputAction playerObj;
 
     [Header("Player Collision")]
-    public bool onGround = false;
-    public Vector3 colliderOffset;
-    [SerializeField]private float distanceToGround;
+        public bool onGround = false;
+        public Vector3 colliderOffset;
+        [SerializeField]private float distanceToGround;
+    
+    private void Awake(){
+        playerInput = new PlayerInput();
+    }
+
+    void OnEnable(){
+        playerInput.Enable();
+    }
+
+    void OnDisable(){
+        playerInput.Disable();
+    }
     
     void Start()
     {
@@ -60,32 +75,32 @@ public class Playermove : MonoBehaviour
         onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, groundLayer) || Physics2D.Raycast(transform.position + new Vector3(-colliderOffset.x,colliderOffset.y,0), Vector2.down, distanceToGround, groundLayer);
 
         //Starts a coyote time after you leave ground
-        if(wasOnGround && !onGround){
+        if(wasOnGround && !onGround && rb.velocity.y < 0){
             coyoteTimer = Time.time + 0.15f;
         }
 
         //Gets directional input from the player
-        direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
+        //direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+       // direction = playerInput.Player.Movement.ReadValue<Vector2>();
   
-        if(Input.GetButtonDown("Jump")){
-            //Starts a jump delay so you don't have to time your jumps perfectly to string them
-            jumpTimer = Time.time + jumpDelay;
-        }
+        // if(playerInput.Player.Jump.WasPressedThisFrame()){
+        //     //Starts a jump delay so you don't have to time your jumps perfectly to string them
+        //     jumpTimer = Time.time + jumpDelay;
+        // }
 
-        if(Input.GetKeyDown(KeyCode.K)){
-            StartCoroutine(Dash());
-        }
+        // if(playerInput.Player.Dash.WasPressedThisFrame()){
+        //     StartCoroutine(Dash());
+        // }
 
     }
 
     void FixedUpdate()
     {
         //Moves character and checks to see if it should change the gravity and drag
-        if(stunned == false){
-            moveCharacter(direction.x);
-
-        } else if(stunned == true && stunRecovery == false) {
+        
+            //moveCharacter();
+       moveCharacter();
+        if(stunned == true && stunRecovery == false) {
             StartCoroutine(stunnedTimer());
         }
 
@@ -101,18 +116,27 @@ public class Playermove : MonoBehaviour
         }
     }
 
-    void moveCharacter(float horizontal)
+    public void moveCharacter()
     {
-        //Adds a force the direction inputted to move the player
-        rb.AddForce(Vector2.right * horizontal * moveSpeed);
+        if(stunned == false){
+             float horizontal = direction.x;
+            //Adds a force the direction inputted to move the player
+            rb.AddForce(Vector2.right * horizontal * moveSpeed);
 
-        //Checks to see which the direction the player is moving and which direction they are facing than flips if their not the same
-        if((horizontal > 0 && !facingRight) || (horizontal < 0 && facingRight)){
-            Flip();
+            //Checks to see which the direction the player is moving and which direction they are facing than flips if their not the same
+            if((horizontal > 0 && !facingRight) || (horizontal < 0 && facingRight)){
+                Flip();
+            }
+            if(Mathf.Abs(rb.velocity.x) > maxSpeed){
+                rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
+            }
         }
-        if(Mathf.Abs(rb.velocity.x) > maxSpeed){
-            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
-        }
+    }
+
+    public void StartJump(){
+        //if(jumpTimer < Time.time){
+            jumpTimer = Time.time + jumpDelay;
+        //}
     }
 
     void Jump()
@@ -149,7 +173,7 @@ public class Playermove : MonoBehaviour
             rb.gravityScale = gravity;
             rb.drag = linearDrag * 0.15f;
             //if(rb.velocity.y < 0){
-                rb.gravityScale = gravity * fallMultiplier;
+            rb.gravityScale = gravity * fallMultiplier;
             //}
             //else if(rb.velocity.y > 0 && !Input.GetButton("Jump")){
                 //rb.gravityScale = gravity * (fallMultiplier/1.7f);
@@ -157,9 +181,10 @@ public class Playermove : MonoBehaviour
         }
     }
 
-    IEnumerator Dash(){
+    public IEnumerator Dash(){
 
         if(dashing == false && dashesLeft > 0 && stunned == false){
+            coyoteTimer = 0;
             dashing = true;
             rb.velocity = new Vector2(0,0);
             float oldFall = fallMultiplier;
@@ -167,12 +192,13 @@ public class Playermove : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
             rb.velocity = new Vector2(0,0);
             if(direction == new Vector2(0,0)) direction = new Vector2(facingRight ? 1 : -1 ,0);
-            rb.AddForce(dashSpeed * direction, ForceMode2D.Impulse);
+            rb.AddForce(dashSpeed * direction.normalized, ForceMode2D.Impulse);
+            direction = new Vector2(0,0);
             yield return new WaitForSeconds(0.2f);
             fallMultiplier = oldFall;
             dashesLeft -= 1;
             dashing = false;
-            stunned = true;
+            //stunned = true;
         }
     }
 

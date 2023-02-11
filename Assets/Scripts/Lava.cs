@@ -6,6 +6,7 @@ public class Lava : MonoBehaviour
 {
     [SerializeField]private Transform respawn;
     [SerializeField]private Transform deathSpot;
+    [SerializeField]private float respawnTime;
     void OnTriggerEnter2D(Collider2D col){
         if(col.gameObject.tag == "Player"){
             StartCoroutine(Respawn(col.gameObject));
@@ -14,7 +15,7 @@ public class Lava : MonoBehaviour
 
     IEnumerator Respawn(GameObject col){
         col.transform.position = deathSpot.position;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(respawnTime);
         col.transform.position = respawn.position;
     }
 }
