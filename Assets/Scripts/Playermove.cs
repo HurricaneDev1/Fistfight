@@ -198,6 +198,7 @@ public class Playermove : MonoBehaviour
             fallMultiplier = oldFall;
             dashesLeft -= 1;
             dashing = false;
+            GetComponent<Punch>().PunchAction();
             //stunned = true;
         }
     }
