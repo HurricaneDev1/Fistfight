@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203967894}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Attackpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 499907237}
   - component: {fileID: 499907238}
   - component: {fileID: 1852333061}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -188,13 +188,20 @@ MonoBehaviour:
   linearDrag: 4
   gravity: 1
   fallMultiplier: 5
+  staticFallMultiplier: 0
   maxVerticalSpeed: 100
   jumpHeight: 15
   jumpDelay: 0.25
+  stunned: 1
+  headBopAmount: 100
+  howLongYouAreStunned: 0.2
   dashSpeed: 15
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
   player: {fileID: 517260781506697333}
   onGround: 0
   colliderOffset: {x: 0.1, y: -0.2, z: 0}
@@ -272,6 +279,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d32224b3-3b97-47a5-b999-17c5847f2f58
     m_ActionName: Player/Dash[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 499907238}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: OnPunch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ccf3ba0d-e2fc-42af-bc6a-b08cd2b3b2ee
+    m_ActionName: Player/Punch[/Keyboard/j]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: Player
@@ -306,3 +329,4 @@ MonoBehaviour:
   upForce: 1.5
   overallPower: 100
   punchPoint: {fileID: 203967894}
+  punchGravDelay: 0.3

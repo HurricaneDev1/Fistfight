@@ -15,6 +15,7 @@ public class Playermove : MonoBehaviour
         public float linearDrag = 4f;
         public float gravity = 1;
         public float fallMultiplier = 5;
+        public float staticFallMultiplier;
         public float maxVerticalSpeed;
 
     [Header("Jump Stuff")]
@@ -25,10 +26,11 @@ public class Playermove : MonoBehaviour
 
     [Header("Dash")]
 
-        private bool stunned = true;
+        public bool stunned = true;
         private bool stunRecovery = false;
+        [SerializeField]private float headBopAmount;
 
-        private float howLongYouAreStunned = 1f;
+        [SerializeField]private float howLongYouAreStunned = 1f;
         private int dashesLeft = 1;
 
         [SerializeField]private float dashSpeed;
@@ -38,6 +40,7 @@ public class Playermove : MonoBehaviour
         private Rigidbody2D rb;
         private SpriteRenderer spri;
         public LayerMask groundLayer;
+        public LayerMask playerLayer;
         public GameObject player;
         public PlayerInput playerInput;
         private InputAction playerObj;
@@ -63,6 +66,7 @@ public class Playermove : MonoBehaviour
     {
         spri = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        staticFallMultiplier = fallMultiplier;
     }
 
     void Update()
@@ -78,6 +82,13 @@ public class Playermove : MonoBehaviour
         if(wasOnGround && !onGround && rb.velocity.y < 0){
             coyoteTimer = Time.time + 0.15f;
         }
+        RaycastHit2D guy = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, playerLayer);
+        if(guy && guy.rigidbody.gameObject != gameObject){
+            Debug.Log(guy.rigidbody.gameObject.name);
+            rb.AddForce(Vector2.up * headBopAmount, ForceMode2D.Impulse);
+            guy.rigidbody.AddForce(Vector2.down * headBopAmount, ForceMode2D.Impulse);
+        }
+        
 
         //Gets directional input from the player
         //direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -187,7 +198,6 @@ public class Playermove : MonoBehaviour
             coyoteTimer = 0;
             dashing = true;
             rb.velocity = new Vector2(0,0);
-            float oldFall = fallMultiplier;
             fallMultiplier = 0;
             yield return new WaitForSeconds(0.05f);
             rb.velocity = new Vector2(0,0);
@@ -195,10 +205,10 @@ public class Playermove : MonoBehaviour
             rb.AddForce(dashSpeed * direction.normalized, ForceMode2D.Impulse);
             direction = new Vector2(0,0);
             yield return new WaitForSeconds(0.2f);
-            fallMultiplier = oldFall;
+            fallMultiplier = staticFallMultiplier;
             dashesLeft -= 1;
             dashing = false;
-            GetComponent<Punch>().PunchAction();
+            GetComponent<Punch>().PunchAction(4);
             //stunned = true;
         }
     }
