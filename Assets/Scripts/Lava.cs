@@ -14,6 +14,8 @@ public class Lava : MonoBehaviour
     }
 
     IEnumerator Respawn(GameObject col){
+        if(col.GetComponent<Playermove>())col.GetComponent<Playermove>().deathParticle.Play();
+        yield return new WaitForSeconds(0.01f);
         col.transform.position = deathSpot.position;
         yield return new WaitForSeconds(respawnTime);
         col.transform.position = respawn.position;

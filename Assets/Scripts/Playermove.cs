@@ -28,7 +28,10 @@ public class Playermove : MonoBehaviour
 
         public bool stunned = true;
         private bool stunRecovery = false;
-        [SerializeField]private float headBopAmount;
+        [SerializeField]private float headBopJumpAmount;
+        [SerializeField]private float headBopSlamAmount;
+        [SerializeField]private float headBopRadius;
+        [SerializeField]private Transform footCenter;
 
         [SerializeField]private float howLongYouAreStunned = 1f;
         private int dashesLeft = 1;
@@ -44,6 +47,8 @@ public class Playermove : MonoBehaviour
         public GameObject player;
         public PlayerInput playerInput;
         private InputAction playerObj;
+        public ParticleSystem punchParticle;
+        public ParticleSystem deathParticle;
 
     [Header("Player Collision")]
         public bool onGround = false;
@@ -82,11 +87,15 @@ public class Playermove : MonoBehaviour
         if(wasOnGround && !onGround && rb.velocity.y < 0){
             coyoteTimer = Time.time + 0.15f;
         }
-        RaycastHit2D guy = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, distanceToGround, playerLayer);
-        if(guy && guy.rigidbody.gameObject != gameObject){
-            Debug.Log(guy.rigidbody.gameObject.name);
-            rb.AddForce(Vector2.up * headBopAmount, ForceMode2D.Impulse);
-            guy.rigidbody.AddForce(Vector2.down * headBopAmount, ForceMode2D.Impulse);
+
+        Collider2D[] guy = Physics2D.OverlapCircleAll(footCenter.position, headBopRadius, playerLayer);
+        foreach(Collider2D col in guy){
+            if(col && col.gameObject != gameObject){
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+                rb.AddForce(Vector2.up * headBopJumpAmount, ForceMode2D.Impulse);
+                col.GetComponent<Rigidbody2D>().velocity = new Vector2(col.GetComponent<Rigidbody2D>().velocity.x,0);
+                col.GetComponent<Rigidbody2D>().AddForce(Vector2.down * headBopSlamAmount, ForceMode2D.Impulse);
+            }
         }
         
 
@@ -195,7 +204,6 @@ public class Playermove : MonoBehaviour
     public IEnumerator Dash(){
 
         if(dashing == false && dashesLeft > 0 && stunned == false){
-            coyoteTimer = 0;
             dashing = true;
             rb.velocity = new Vector2(0,0);
             fallMultiplier = 0;
@@ -224,5 +232,6 @@ public class Playermove : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position + colliderOffset, transform.position + colliderOffset + Vector3.down * distanceToGround);
         Gizmos.DrawLine(transform.position + new Vector3(-colliderOffset.x,colliderOffset.y,0), transform.position +  new Vector3(-colliderOffset.x,colliderOffset.y,0) + Vector3.down * distanceToGround);
+        Gizmos.DrawWireSphere(footCenter.position, headBopRadius);
     }
 }

@@ -34,6 +34,7 @@ public class Punch : MonoBehaviour
                 guy.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
                 if(move) {
                     move.stunned = true;
+                    move.punchParticle.Play();
                 }
                 guy.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(GetComponent<Playermove>().facingRight ? punchForce : -punchForce , upForce) * overallPower * punchMod);
             }
