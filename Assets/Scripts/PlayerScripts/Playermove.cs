@@ -72,6 +72,7 @@ public class Playermove : MonoBehaviour
         spri = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         staticFallMultiplier = fallMultiplier;
+        PlayerManager.Instance.AddPlayer(gameObject);
     }
 
     void Update()
@@ -88,6 +89,7 @@ public class Playermove : MonoBehaviour
             coyoteTimer = Time.time + 0.15f;
         }
 
+        //Checks to see if their is a player below you; if their is, do a headbop
         Collider2D[] guy = Physics2D.OverlapCircleAll(footCenter.position, headBopRadius, playerLayer);
         foreach(Collider2D col in guy){
             if(col && col.gameObject != gameObject){
@@ -97,34 +99,17 @@ public class Playermove : MonoBehaviour
                 col.GetComponent<Rigidbody2D>().AddForce(Vector2.down * headBopSlamAmount, ForceMode2D.Impulse);
             }
         }
-        
-
-        //Gets directional input from the player
-        //direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-       // direction = playerInput.Player.Movement.ReadValue<Vector2>();
-  
-        // if(playerInput.Player.Jump.WasPressedThisFrame()){
-        //     //Starts a jump delay so you don't have to time your jumps perfectly to string them
-        //     jumpTimer = Time.time + jumpDelay;
-        // }
-
-        // if(playerInput.Player.Dash.WasPressedThisFrame()){
-        //     StartCoroutine(Dash());
-        // }
-
     }
 
     void FixedUpdate()
     {
         //Moves character and checks to see if it should change the gravity and drag
-        
-            //moveCharacter();
-       moveCharacter();
+        moveCharacter();
+        modifyPhysics();
+
         if(stunned == true && stunRecovery == false) {
             StartCoroutine(stunnedTimer());
         }
-
-        modifyPhysics();
 
         if(Mathf.Abs(rb.velocity.y) > maxVerticalSpeed){
             rb.velocity = new Vector2(rb.velocity.x , Mathf.Sign(rb.velocity.y) * maxVerticalSpeed);
@@ -135,11 +120,11 @@ public class Playermove : MonoBehaviour
             Jump();
         }
     }
-
+    //Moves the player based on input
     public void moveCharacter()
     {
         if(stunned == false){
-             float horizontal = direction.x;
+            float horizontal = direction.x;
             //Adds a force the direction inputted to move the player
             rb.AddForce(Vector2.right * horizontal * moveSpeed);
 
@@ -153,29 +138,33 @@ public class Playermove : MonoBehaviour
         }
     }
 
+    //Starts to see if you can jump
     public void StartJump(){
         //if(jumpTimer < Time.time){
             jumpTimer = Time.time + jumpDelay;
         //}
     }
-
+    //Jump action
     void Jump()
     {
         //Makes the character jump
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Impulse);
-        //Resets coyote and jump timer to prevent exploits
+
+        //Resets coyote and jump timer to prevent additional jumps
         jumpTimer = 0;
         coyoteTimer = 0;
 
     }
 
+    //Flips the player
     void Flip(){
         //Changes the facing right variable to its opposite than flips the player
         facingRight = !facingRight;
         player.transform.rotation = Quaternion.Euler(0, facingRight ? 0 : 180, 0);
     }
 
+    //Messes with the players drag and stuff for better movement
     void modifyPhysics(){
         bool changingDirection = (direction.x > 0 && rb.velocity.x < 0) || (direction.x < 0 && rb.velocity.x > 0);
         if(onGround){
@@ -201,6 +190,7 @@ public class Playermove : MonoBehaviour
         }
     }
 
+    //Does a dash
     public IEnumerator Dash(){
 
         if(dashing == false && dashesLeft > 0 && stunned == false){
@@ -221,6 +211,7 @@ public class Playermove : MonoBehaviour
         }
     }
 
+    //Starts counting down till your no longer stunned
     IEnumerator stunnedTimer() {
         stunRecovery = true;
         yield return new WaitForSeconds(howLongYouAreStunned);

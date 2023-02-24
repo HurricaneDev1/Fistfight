@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         mode = newMode;
         switch(mode){
             case GameMode.LastManStanding:
-            
+              
                 break;
         }
     }

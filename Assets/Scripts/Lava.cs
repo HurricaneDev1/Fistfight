@@ -13,11 +13,14 @@ public class Lava : MonoBehaviour
         }
     }
 
+    //Kills and respawns a player who touched lava @ need to add limited respawns
     IEnumerator Respawn(GameObject col){
         if(col.GetComponent<Playermove>())col.GetComponent<Playermove>().deathParticle.Play();
+
         yield return new WaitForSeconds(0.01f);
         col.transform.position = deathSpot.position;
+
         yield return new WaitForSeconds(respawnTime);
-        col.transform.position = respawn.position;
+        col.transform.position = PlayerManager.Instance.map.respawnPoints[Random.Range(0,PlayerManager.Instance.map.respawnPoints.Count)].position;
     }
 }
