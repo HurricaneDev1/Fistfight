@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 499907238}
   - component: {fileID: 1852333061}
   - component: {fileID: 2138174195}
+  - component: {fileID: 561533045}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -227,7 +228,7 @@ MonoBehaviour:
   maxVerticalSpeed: 100
   jumpHeight: 15
   jumpDelay: 0.25
-  stunned: 1
+  stunned: 0
   headBopJumpAmount: 20
   headBopSlamAmount: 4
   headBopRadius: 0.135
@@ -382,6 +383,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61540cc99ddfc0c4dabbc575a4469409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &561533045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517260781506697333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35b67169728b20e41a4fcd0bb3c71a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  livesLeft: 0
+  kingTime: 0
+  numWins: 0
 --- !u!1001 &517260781436599967
 PrefabInstance:
   m_ObjectHideFlags: 0

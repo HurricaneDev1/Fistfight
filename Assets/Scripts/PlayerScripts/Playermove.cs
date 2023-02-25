@@ -33,7 +33,8 @@ public class Playermove : MonoBehaviour
         [SerializeField]private float headBopRadius;
         [SerializeField]private Transform footCenter;
 
-        [SerializeField]private float howLongYouAreStunned = 1f;
+        public float howLongYouAreStunned = 1f;
+        public float staticStunTime = 0.2f;
         private int dashesLeft = 1;
 
         [SerializeField]private float dashSpeed;

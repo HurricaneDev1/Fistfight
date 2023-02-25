@@ -21,6 +21,15 @@ public class Lava : MonoBehaviour
         col.transform.position = deathSpot.position;
 
         yield return new WaitForSeconds(respawnTime);
-        col.transform.position = PlayerManager.Instance.map.respawnPoints[Random.Range(0,PlayerManager.Instance.map.respawnPoints.Count)].position;
+        GamePlayer curPlayer = col.GetComponent<GamePlayer>();
+        if(curPlayer){
+            curPlayer.livesLeft -= 1;
+            if(curPlayer.livesLeft > 0){
+                col.transform.position = PlayerManager.Instance.map.respawnPoints[Random.Range(0,PlayerManager.Instance.map.respawnPoints.Count)].position;
+            }
+            GameManager.Instance.ModeEffects();
+        }else{
+            col.transform.position = PlayerManager.Instance.map.respawnPoints[Random.Range(0,PlayerManager.Instance.map.respawnPoints.Count)].position;
+        }
     }
 }

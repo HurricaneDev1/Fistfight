@@ -6,9 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/ManagerCreation.unity
+    guid: 5da716deed64a13429e58563da02fcfa
+  - enabled: 1
     path: Assets/Scenes/WaitRoom.unity
     guid: 91a8b85cdebfbbb4791a9990a0bf9a1a
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/KingOfTheHill.unity
+    guid: a4518c4bb5fd8e541ac577af046866e5
+  - enabled: 1
+    path: Assets/Scenes/HoleInTheWall.unity
+    guid: 103aa9dbd3b52c94a8088f4719b2cd73
   m_configObjects: {}
