@@ -45,6 +45,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void StartSceneSwap(){
+        StartCoroutine(SceneSwap());
+    }
     //Has some logic for when the scene swaps over. Like spawning players and resetting values
     public IEnumerator SceneSwap(){
         if(SceneManager.GetActiveScene().buildIndex == 0){

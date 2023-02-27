@@ -23,6 +23,9 @@ public class Punch : MonoBehaviour
             if(guy.GetComponent<MenuController>()){
                 StartCoroutine(guy.GetComponent<MenuController>().OnPunch());
             }
+            if(guy.GetComponent<PunchToStart>()){
+                guy.GetComponent<PunchToStart>().OnPunch();
+            }
             //Sees if the guy has a rigidbody and is not static
             if(guy.gameObject.GetComponent<Rigidbody2D>() && gameObject != guy.gameObject && guy.gameObject.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static){
                 guy.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
