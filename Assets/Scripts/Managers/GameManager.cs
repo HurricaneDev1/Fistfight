@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     void Awake(){
         Instance = this;
+        mode = GameMode.LastManStanding;
     }
     void Update(){
         
