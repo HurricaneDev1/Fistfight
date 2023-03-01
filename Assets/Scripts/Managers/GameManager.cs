@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameMode mode;
+    public bool endedGame;
 
     void Awake(){
         Instance = this;
@@ -19,17 +20,23 @@ public class GameManager : MonoBehaviour
             case GameMode.LastManStanding:
                 foreach(GameObject player in PlayerManager.Instance.players){
                     StartCoroutine(StartStun(player.GetComponent<Playermove>()));
-                    player.GetComponent<Playermove>().stunned = true;
                     player.GetComponent<GamePlayer>().livesLeft = 3;
                 }
                 break;
+            case GameMode.KingOfTheHill:
+                foreach(GameObject player in PlayerManager.Instance.players){
+                    StartCoroutine(StartStun(player.GetComponent<Playermove>()));
+                    player.GetComponent<GamePlayer>().livesLeft = 10000;
+                    player.GetComponent<GamePlayer>().kingTime = 6;
+                }
+                break;
         }
+        endedGame = false;
     }
 
     public void ModeEffects(){
         switch(mode){
             case GameMode.LastManStanding:
-                Debug.Log("Mode Effects");
                 int stillIn = 0;
                 GameObject playerStillIn = null;
                 foreach(GameObject player in PlayerManager.Instance.players){
@@ -41,6 +48,16 @@ public class GameManager : MonoBehaviour
                 if(stillIn == 1 && playerStillIn){
                     playerStillIn.GetComponent<GamePlayer>().numWins += 1;
                     StartCoroutine(EndOfMode());
+                }
+                break;
+            case GameMode.KingOfTheHill:
+                foreach(GameObject player in PlayerManager.Instance.players){
+                    if(player.GetComponent<GamePlayer>().kingTime <= 0 && !endedGame){
+                        endedGame = true;
+                        player.GetComponent<GamePlayer>().numWins += 1;
+                        StartCoroutine(EndOfMode());
+                        player.GetComponent<GamePlayer>().onHill = false;
+                    }
                 }
                 break;
         }

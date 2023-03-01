@@ -50,6 +50,7 @@ public class Playermove : MonoBehaviour
         private InputAction playerObj;
         public ParticleSystem punchParticle;
         public ParticleSystem deathParticle;
+        public ParticleSystem dash;
 
     [Header("Player Collision")]
         public bool onGround = false;
@@ -196,6 +197,7 @@ public class Playermove : MonoBehaviour
 
         if(dashing == false && dashesLeft > 0 && stunned == false){
             dashing = true;
+            dash.Play();
             rb.velocity = new Vector2(0,0);
             fallMultiplier = 0;
             yield return new WaitForSeconds(0.05f);
@@ -205,6 +207,7 @@ public class Playermove : MonoBehaviour
             direction = new Vector2(0,0);
             yield return new WaitForSeconds(0.2f);
             fallMultiplier = staticFallMultiplier;
+            dash.Stop();
             dashesLeft -= 1;
             dashing = false;
             GetComponent<Punch>().PunchAction(4);

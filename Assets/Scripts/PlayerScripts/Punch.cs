@@ -33,7 +33,7 @@ public class Punch : MonoBehaviour
                 //Stuns other players and plays punch particle
                 if(move) {
                     move.stunned = true;
-                    move.punchParticle.Play();
+                    GetComponent<Playermove>().punchParticle.Play();
                 }
 
                 //Pushes guy
