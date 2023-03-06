@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d13151da0b05e7d4d9fe446a19500991, type: 3}
+  m_Name: Fat Reginald
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 837348174, guid: 2aee2b5c9f48274458b350a11478adb2, type: 3}
+  hitBox: {x: 0.9837326, y: 1.9266}
+  rayCastOffset: {x: 0.1, y: -0.2, z: 0}
+  stunTime: 0
+  dashParticleSize: 1
+  punchAmount: 100
+  dashAmount: 15
+  jumpHeight: 15

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d13151da0b05e7d4d9fe446a19500991, type: 3}
+  m_Name: Squid
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 621b8910db9a32a4fb119c04d9f83065, type: 3}
+  hitBox: {x: 2.366643, y: 1.951241}
+  rayCastOffset: {x: 0.5, y: -0.21, z: 0}
+  stunTime: 0.3
+  dashParticleSize: 1
+  punchAmount: 100
+  dashAmount: 15
+  jumpHeight: 15

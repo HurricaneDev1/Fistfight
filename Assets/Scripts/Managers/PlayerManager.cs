@@ -55,7 +55,8 @@ public class PlayerManager : MonoBehaviour
         }else if(SceneManager.GetActiveScene().name == "WaitRoom"){
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + ((int)GameManager.Instance.mode + 1));
         }else{
-            SceneManager.LoadScene("WinScreen");
+            SceneManager.LoadScene("WaitRoom");
+            GameManager.Instance.mode = GameMode.LastManStanding;
         }
         yield return new WaitForSeconds(0.00001f);
         usedSpawnPoints = new List<Transform>();

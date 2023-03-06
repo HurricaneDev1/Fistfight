@@ -37,7 +37,7 @@ public class Playermove : MonoBehaviour
         public float staticStunTime = 0.2f;
         private int dashesLeft = 1;
 
-        [SerializeField]private float dashSpeed;
+        public float dashSpeed;
         private bool dashing = false;
 
     [Header("Player Components")]

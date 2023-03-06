@@ -402,6 +402,7 @@ MonoBehaviour:
   kingTime: 6
   onHill: 0
   numWins: 0
+  gameText: {fileID: 0}
 --- !u!1001 &2070701288
 PrefabInstance:
   m_ObjectHideFlags: 0
