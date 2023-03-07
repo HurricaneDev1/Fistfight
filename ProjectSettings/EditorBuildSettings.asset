@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HoleInTheWall.unity
     guid: 103aa9dbd3b52c94a8088f4719b2cd73
+  - enabled: 1
+    path: Assets/Scenes/WinScreen.unity
+    guid: 6e5e93d9fdf22bb479d569ccd0438d2b
   m_configObjects: {}

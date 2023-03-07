@@ -7,7 +7,7 @@ public class Punch : MonoBehaviour
     [SerializeField]private float punchForce;
     [SerializeField]private float punchRadius;
     [SerializeField]private float upForce;
-    [SerializeField]private float overallPower;
+    public float overallPower;
     [SerializeField]private Transform punchPoint;
     [SerializeField]private float punchGravDelay;
 
@@ -23,6 +23,9 @@ public class Punch : MonoBehaviour
             if(guy.GetComponent<MenuController>()){
                 StartCoroutine(guy.GetComponent<MenuController>().OnPunch());
             }
+            if(guy.GetComponent<CharacterChanger>()){
+                guy.GetComponent<CharacterChanger>().OnPunch(gameObject);
+            }
             if(guy.GetComponent<PunchToStart>()){
                 guy.GetComponent<PunchToStart>().OnPunch();
             }
@@ -33,7 +36,7 @@ public class Punch : MonoBehaviour
                 //Stuns other players and plays punch particle
                 if(move) {
                     move.stunned = true;
-                    move.punchParticle.Play();
+                    GetComponent<Playermove>().punchParticle.Play();
                 }
 
                 //Pushes guy
