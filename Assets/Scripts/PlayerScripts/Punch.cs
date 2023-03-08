@@ -5,7 +5,7 @@ using UnityEngine;
 public class Punch : MonoBehaviour
 {
     [SerializeField]private float punchForce;
-    [SerializeField]private float punchRadius;
+    public float punchRadius;
     [SerializeField]private float upForce;
     public float overallPower;
     [SerializeField]private Transform punchPoint;
@@ -32,12 +32,13 @@ public class Punch : MonoBehaviour
                 guy.GetComponent<PunchToStart>().OnPunch();
             }
             //Sees if the guy has a rigidbody and is not static
-            if(guy.gameObject.GetComponent<Rigidbody2D>() && gameObject != guy.gameObject && guy.gameObject.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static){
+            if(guy.gameObject.GetComponent<Rigidbody2D>() && gameObject != guy.gameObject && guy.gameObject.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Static && guy.gameObject.tag != "Projectile"){
                 guy.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
 
                 //Stuns other players and plays punch particle
                 if(move) {
                     move.stunned = true;
+                    GetComponent<Playermove>().punchParticle.Play();
                 }
 
                 //Pushes guy

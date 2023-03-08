@@ -18,5 +18,6 @@ MonoBehaviour:
   stunTime: 0.2
   dashParticleSize: 0.35
   punchAmount: 100
-  dashAmount: 100
+  dashAmount: 15
   jumpHeight: 15
+  punchRadius: 0.5

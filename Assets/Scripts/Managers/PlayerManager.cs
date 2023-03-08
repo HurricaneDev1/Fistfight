@@ -34,7 +34,10 @@ public class PlayerManager : MonoBehaviour
     }
     //Spawns players in spawn points @ should make random
     public void Spawn(GameObject player){
-        Transform newSpawn = map.spawnPoints[Random.Range(0, map.spawnPoints.Count)];
+        Transform newSpawn = null;
+        if(map.spawnPoints.Count > 0){
+            newSpawn = map.spawnPoints[Random.Range(0, map.spawnPoints.Count)];
+        }
         if(newSpawn != null){
             player.transform.position = newSpawn.position;
             map.spawnPoints.Remove(newSpawn);

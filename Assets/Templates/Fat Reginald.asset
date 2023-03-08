@@ -15,8 +15,9 @@ MonoBehaviour:
   sprite: {fileID: 837348174, guid: 2aee2b5c9f48274458b350a11478adb2, type: 3}
   hitBox: {x: 0.9837326, y: 1.9266}
   rayCastOffset: {x: 0.1, y: -0.2, z: 0}
-  stunTime: 0
+  stunTime: 0.05
   dashParticleSize: 1
   punchAmount: 100
-  dashAmount: 15
+  dashAmount: 10
   jumpHeight: 15
+  punchRadius: 0.5

@@ -13,4 +13,5 @@ public class CharacterTemplate : ScriptableObject
     public float punchAmount;
     public float dashAmount;
     public float jumpHeight;
+    public float punchRadius;
 }

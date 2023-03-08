@@ -20,3 +20,4 @@ MonoBehaviour:
   punchAmount: 100
   dashAmount: 15
   jumpHeight: 15
+  punchRadius: 1

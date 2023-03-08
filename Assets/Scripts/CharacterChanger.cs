@@ -19,5 +19,6 @@ public class CharacterChanger : MonoBehaviour
         move.jumpHeight = template.jumpHeight;
         move.dashSpeed = template.dashAmount;
         player.GetComponent<Punch>().overallPower = template.punchAmount;
+        player.GetComponent<Punch>().punchRadius = template.punchRadius;
     }
 }

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: QuestionMark
   m_EditorClassIdentifier: 
   sprite: {fileID: -1884756919, guid: c2b2edea54ac8b844b9d7d1951a57b33, type: 3}
-  hitBox: {x: 0.8626995, y: 2.093796}
+  hitBox: {x: 0.8626995, y: 1.9266}
   rayCastOffset: {x: 0.1, y: -0.25, z: 0}
   stunTime: 0.1
   dashParticleSize: 0.7
   punchAmount: 100
   dashAmount: 100
   jumpHeight: 15
+  punchRadius: 0.5
