@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d13151da0b05e7d4d9fe446a19500991, type: 3}
-  m_Name: Boat
+  m_Name: QuestionMark
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: fa8c517c4b5221b49888eab31d3638d6, type: 3}
-  hitBox: {x: 2.14505, y: 1.719759}
-  rayCastOffset: {x: -0.3, y: -0.23, z: 0}
-  stunTime: 0.2
-  dashParticleSize: 1
-  punchAmount: 1100
-  dashAmount: 30
-  jumpHeight: 0
+  sprite: {fileID: -1884756919, guid: c2b2edea54ac8b844b9d7d1951a57b33, type: 3}
+  hitBox: {x: 0.8626995, y: 2.093796}
+  rayCastOffset: {x: 0.1, y: -0.25, z: 0}
+  stunTime: 0.1
+  dashParticleSize: 0.7
+  punchAmount: 100
+  dashAmount: 100
+  jumpHeight: 15

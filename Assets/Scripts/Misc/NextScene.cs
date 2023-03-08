@@ -5,9 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class NextScene : MonoBehaviour
 {
+    public int timeBeforeSwap;
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(PlayerManager.Instance.SceneSwap());
+       StartCoroutine(WaitTillTime());
+    }
+
+    private IEnumerator WaitTillTime(){
+        yield return new WaitForSeconds(timeBeforeSwap);
+        PlayerManager.Instance.StartSceneSwap(null);
     }
 }

@@ -22,9 +22,11 @@ public class Punch : MonoBehaviour
 
             if(guy.GetComponent<MenuController>()){
                 StartCoroutine(guy.GetComponent<MenuController>().OnPunch());
+                GetComponent<Playermove>().punchParticle.Play();
             }
             if(guy.GetComponent<CharacterChanger>()){
                 guy.GetComponent<CharacterChanger>().OnPunch(gameObject);
+                GetComponent<Playermove>().punchParticle.Play();
             }
             if(guy.GetComponent<PunchToStart>()){
                 guy.GetComponent<PunchToStart>().OnPunch();
@@ -36,7 +38,6 @@ public class Punch : MonoBehaviour
                 //Stuns other players and plays punch particle
                 if(move) {
                     move.stunned = true;
-                    GetComponent<Playermove>().punchParticle.Play();
                 }
 
                 //Pushes guy

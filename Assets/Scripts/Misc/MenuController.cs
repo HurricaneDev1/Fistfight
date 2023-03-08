@@ -14,16 +14,15 @@ public class MenuController : MonoBehaviour
         "Hole in the wall"
     };
     [SerializeField]private int currentNameIndex;
-
     void Start(){
-        
+        currentNameIndex = (int)GameManager.Instance.mode;
+        gameModeText.text = names[currentNameIndex];
     }
-
     public IEnumerator OnPunch(){
         if(changing == false){
             changing = true;
             currentNameIndex = (currentNameIndex + 1) % names.Count;
-            onHit.Play();
+            // onHit.Play();
             GameManager.Instance.mode = (GameMode)currentNameIndex;
             gameModeText.text = names[currentNameIndex];
             yield return new WaitForSeconds(0.2f);

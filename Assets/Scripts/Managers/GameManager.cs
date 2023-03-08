@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         
     }
     public void StartMode(){
+        endedGame = false;
         switch(mode){
             case GameMode.LastManStanding:
                 foreach(GameObject player in PlayerManager.Instance.players){
@@ -30,12 +31,18 @@ public class GameManager : MonoBehaviour
                     player.GetComponent<GamePlayer>().kingTime = 6;
                 }
                 break;
+            case GameMode.HoleInTheWall:
+                foreach(GameObject player in PlayerManager.Instance.players){
+                    StartCoroutine(StartStun(player.GetComponent<Playermove>()));
+                    player.GetComponent<GamePlayer>().livesLeft = 1;
+                }
+                break;
         }
-        endedGame = false;
     }
 
     public void ModeEffects(){
         switch(mode){
+            case GameMode.HoleInTheWall:
             case GameMode.LastManStanding:
                 int stillIn = 0;
                 GameObject playerStillIn = null;
@@ -45,9 +52,10 @@ public class GameManager : MonoBehaviour
                         playerStillIn = player;
                     }
                 }
-                if(stillIn == 1 && playerStillIn){
+                if(stillIn == 1 && playerStillIn && !endedGame){
                     playerStillIn.GetComponent<GamePlayer>().numWins += 1;
-                    StartCoroutine(EndOfMode());
+                    endedGame = true;
+                    PlayerManager.Instance.StartSceneSwap(playerStillIn);
                 }
                 break;
             case GameMode.KingOfTheHill:
@@ -55,7 +63,7 @@ public class GameManager : MonoBehaviour
                     if(player.GetComponent<GamePlayer>().kingTime <= 0 && !endedGame){
                         endedGame = true;
                         player.GetComponent<GamePlayer>().numWins += 1;
-                        StartCoroutine(EndOfMode());
+                        PlayerManager.Instance.StartSceneSwap(player);
                         player.GetComponent<GamePlayer>().onHill = false;
                     }
                 }
@@ -64,16 +72,16 @@ public class GameManager : MonoBehaviour
     }
 
     private IEnumerator StartStun(Playermove playermove){
-        playermove.howLongYouAreStunned = 0.5f;
+        playermove.howLongYouAreStunned = 0.4f;
         playermove.stunned = true;
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.4f);
         playermove.howLongYouAreStunned = playermove.staticStunTime;
     }
 
-    private IEnumerator EndOfMode(){
-        yield return new WaitForSeconds(2);
-        StartCoroutine(PlayerManager.Instance.SceneSwap());
-    }
+    // private IEnumerator EndOfMode(GameObject player){
+    //     yield return new WaitForSeconds(2);
+    //     StartCoroutine(PlayerManager.Instance.SceneSwap(player));
+    // }
 }
 
 public enum GameMode{

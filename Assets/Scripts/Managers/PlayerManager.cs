@@ -7,7 +7,6 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
     public List<GameObject> players = new List<GameObject>();
-    public List<Transform> usedSpawnPoints = new List<Transform>();
     public Map map;
 
     void Awake(){
@@ -19,9 +18,9 @@ public class PlayerManager : MonoBehaviour
     }
 
     void Update(){
-        if(Input.GetKeyDown(KeyCode.Y)){
-            StartCoroutine(SceneSwap());
-        }
+        // if(Input.GetKeyDown(KeyCode.Y)){
+        //     StartCoroutine(SceneSwap());
+        // }
 
         if(map == null){
             map = FindObjectOfType<Map>();
@@ -35,34 +34,49 @@ public class PlayerManager : MonoBehaviour
     }
     //Spawns players in spawn points @ should make random
     public void Spawn(GameObject player){
-        foreach(Transform spawn in map.spawnPoints){
-            if(!usedSpawnPoints.Contains(spawn)){
-                player.transform.position = spawn.position;
-                player.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
-                usedSpawnPoints.Add(spawn);
-                break;
-            }
+        Transform newSpawn = map.spawnPoints[Random.Range(0, map.spawnPoints.Count)];
+        if(newSpawn != null){
+            player.transform.position = newSpawn.position;
+            map.spawnPoints.Remove(newSpawn);
+            player.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
+        // foreach(Transform spawn in map.spawnPoints){
+            //     if(!usedSpawnPoints.Contains(spawn)){
+            //         player.transform.position = spawn.position;
+            //         player.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+            //         usedSpawnPoints.Add(spawn);
+            //         usedSpawn = spawn;
+            //         break;
+            //     }
+            //     Debug.Log("Spawning");
+            // }
     }
 
-    public void StartSceneSwap(){
-        StartCoroutine(SceneSwap());
+    public void StartSceneSwap(GameObject priorityPlayer){
+        StartCoroutine(SceneSwap(priorityPlayer));
     }
     //Has some logic for when the scene swaps over. Like spawning players and resetting values
-    public IEnumerator SceneSwap(){
+    public IEnumerator SceneSwap(GameObject priorityPlayer){
         if(SceneManager.GetActiveScene().buildIndex == 0){
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }else if(SceneManager.GetActiveScene().name == "WaitRoom"){
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + ((int)GameManager.Instance.mode + 1));
+        }else if(SceneManager.GetActiveScene().name != "WinScreen"){
+            SceneManager.LoadScene("WinScreen");
         }else{
             SceneManager.LoadScene("WaitRoom");
-            GameManager.Instance.mode = GameMode.LastManStanding;
         }
         yield return new WaitForSeconds(0.00001f);
-        usedSpawnPoints = new List<Transform>();
         map = FindObjectOfType<Map>();
+        if(priorityPlayer){
+            priorityPlayer.transform.position = map.spawnPoints[0].position;
+            map.spawnPoints.Remove(map.spawnPoints[0]);
+            priorityPlayer.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+        }
         foreach(GameObject guy in players){
-            Spawn(guy);
+            if(guy != priorityPlayer){
+                Spawn(guy);   
+            }
         }
         GameManager.Instance.StartMode();
     }
